@@ -1,0 +1,20 @@
+[
+  {
+    "name": "新闻台",
+    "radioList": [
+      {
+        "name": "北京新闻广播",
+        "playUrl": "http://live.xmcdn.com/live/91/64.m3u8"
+      }
+    ]
+  },
+  {
+    "name": "音乐台",
+    "radioList": [
+      {
+        "name": "流行音乐先锋FM90.0 My Radio",
+        "playUrl": "http://live.xmcdn.com/live/468/64.m3u8"
+      }
+    ]
+  }
+]
