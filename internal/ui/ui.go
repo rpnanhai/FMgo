@@ -61,7 +61,7 @@ func New(categories []model.Category, player *player.Player, db *db.Database) (*
 	}
 
 	u.setupWidgets()
-	u.updateRadioList()
+	u.updateRadioList(true)
 	return u, nil
 }
 
@@ -104,7 +104,7 @@ func (u *UI) setupWidgets() {
 	)
 }
 
-func (u *UI) updateRadioList() {
+func (u *UI) updateRadioList(isFlushRow bool) {
 	u.mu.RLock()
 	defer u.mu.RUnlock()
 
@@ -137,7 +137,9 @@ func (u *UI) updateRadioList() {
 
 	u.radioList.Title = "电台列表"
 	u.radioList.Rows = items
-	u.radioList.SelectedRow = 0
+	if isFlushRow {
+		u.radioList.SelectedRow = 0
+	}
 	ui.Render(u.grid)
 }
 
@@ -198,7 +200,7 @@ func (u *UI) toggleCategory(name string) {
 	name = strings.TrimSpace(name)
 	if _, exists := u.collapsedCats[name]; exists {
 		u.collapsedCats[name] = !u.collapsedCats[name]
-		u.updateRadioList()
+		u.updateRadioList(false)
 	}
 }
 
@@ -296,7 +298,7 @@ func (u *UI) exitSearchMode() {
 	u.isSearching = false
 	u.searchText = ""
 	u.searchInput.Text = ""
-	u.updateRadioList()
+	u.updateRadioList(true)
 }
 
 func (u *UI) handleSearchMode(e ui.Event) {
@@ -342,7 +344,7 @@ func (u *UI) updateSearchResults() {
 	searchText := strings.ToLower(u.searchText)
 
 	if searchText == "" {
-		u.updateRadioList()
+		u.updateRadioList(true)
 		return
 	}
 
@@ -397,7 +399,7 @@ func (u *UI) Run() {
 				u.findAndPlayRadio(u.radioList.Rows[u.radioList.SelectedRow])
 				logger.Info("选中历史记录: %s", u.radioList.Rows[u.radioList.SelectedRow])
 				u.currentView = "main"
-				u.updateRadioList()
+				u.updateRadioList(true)
 				continue
 			}
 
@@ -406,7 +408,7 @@ func (u *UI) Run() {
 				u.findAndPlayRadio(u.radioList.Rows[u.radioList.SelectedRow])
 				logger.Info("选中收藏电台: %s", u.radioList.Rows[u.radioList.SelectedRow])
 				u.currentView = "main"
-				u.updateRadioList()
+				u.updateRadioList(true)
 				continue
 			}
 
@@ -475,7 +477,7 @@ func (u *UI) Run() {
 						u.showFavorites()
 					case "favorites":
 						u.currentView = "main"
-						u.updateRadioList()
+						u.updateRadioList(true)
 					}
 				}
 			}
